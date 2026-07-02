@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ENA Read Submission Helper</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #141914;
+      --muted: #5d675d;
+      --paper: #f5f5ee;
+      --panel: #ffffff;
+      --line: #d8dccd;
+      --green: #1f7a4d;
+      --red: #a43d30;
+      --accent: #356b8c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Avenir Next", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(20,25,20,.035) 1px, transparent 1px) 0 0 / 26px 26px,
+        linear-gradient(0deg, rgba(20,25,20,.03) 1px, transparent 1px) 0 0 / 26px 26px,
+        var(--paper);
+    }
+    main { max-width: 720px; margin: 0 auto; padding: 34px 28px 28px; }
+    header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 24px; }
+    h1 { margin: 0 0 8px; font-size: 28px; font-weight: 700; letter-spacing: 0; }
+    p { margin: 0; color: var(--muted); line-height: 1.45; }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--red); }
+    .status.ok .dot { background: var(--green); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 18px 0; }
+    .panel {
+      background: color-mix(in srgb, var(--panel), transparent 5%);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 96px;
+    }
+    .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+    .value { font-size: 18px; font-weight: 700; word-break: break-word; }
+    code { background: #e7eadf; padding: 2px 5px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em; }
+    .log {
+      margin-top: 12px;
+      background: #111611;
+      color: #dfe9d7;
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 110px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+    footer { margin-top: 18px; font-size: 13px; color: var(--muted); }
+    @media (max-width: 620px) {
+      header { display: block; }
+      .status { margin-top: 14px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>ENA Read Submission Helper</h1>
+        <p>Native helper for direct ENA read uploads from this machine.</p>
+      </div>
+      <div id="status" class="status"><span class="dot"></span><span>Checking</span></div>
+    </header>
+
+    <section class="grid">
+      <div class="panel">
+        <div class="label">Helper API</div>
+        <div class="value"><code id="apiUrl">localhost</code></div>
+      </div>
+      <div class="panel">
+        <div class="label">Credentials</div>
+        <div class="value" id="credentials">Unknown</div>
+      </div>
+      <div class="panel">
+        <div class="label">Service</div>
+        <div class="value" id="service">ENA Read Submission Helper</div>
+      </div>
+      <div class="panel">
+        <div class="label">Version</div>
+        <div class="value" id="version">-</div>
+      </div>
+    </section>
+
+    <div class="panel">
+      <div class="label">Activity</div>
+      <div id="log" class="log">Waiting for an ENA submission app to connect to the helper API.</div>
+    </div>
+
+    <footer>
+      Keep this app open while scanning or submitting reads. Webin credentials are held in memory only.
+    </footer>
+  </main>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const port = params.get("port") || "9100";
+    const base = `http://127.0.0.1:${port}`;
+    document.getElementById("apiUrl").textContent = base;
+
+    async function refresh() {
+      const status = document.getElementById("status");
+      try {
+        const res = await fetch(`${base}/api/health`);
+        const health = await res.json();
+        status.className = "status ok";
+        status.querySelector("span:last-child").textContent = "Running";
+        document.getElementById("credentials").textContent = health.credentials_configured ? "Set" : "Not set";
+        document.getElementById("service").textContent = health.display_name || health.service;
+        document.getElementById("version").textContent = health.version;
+        document.getElementById("log").textContent =
+          `Listening on ${base}\nReads will upload directly from this computer via Java Webin-CLI.`;
+      } catch (err) {
+        status.className = "status";
+        status.querySelector("span:last-child").textContent = "Offline";
+        document.getElementById("log").textContent = String(err);
+      }
+    }
+    refresh();
+    setInterval(refresh, 3000);
+  </script>
+</body>
+</html>
