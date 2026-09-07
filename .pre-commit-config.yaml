@@ -1,0 +1,17 @@
+# Standardised across the MIMICC/ENA repos. This one has no Python, so it
+# carries the hygiene hooks only — type checking and tests run via npm in
+# .github/workflows/test.yml.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ["--allow-multiple-documents"]
+      - id: check-json
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: mixed-line-ending
+      - id: detect-private-key
