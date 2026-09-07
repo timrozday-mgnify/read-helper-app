@@ -42,6 +42,15 @@ releases should be Authenticode signed. Java is not bundled in the app. Linux
 RPM builds are best run on Linux; macOS cross-builds can fail later in
 `rpmbuild` even when AppImage and deb packaging metadata is valid.
 
+macOS packaging fails closed: it requires a **Developer ID Application**
+certificate and notarization credentials, rather than emitting an unsigned
+release. For CI, provide a base64-encoded `.p12` certificate through
+`CSC_LINK`, its password through `CSC_KEY_PASSWORD`, and either the App Store
+Connect API-key variables `APPLE_API_KEY`, `APPLE_API_KEY_ID`, and
+`APPLE_API_ISSUER` (recommended), or an Apple ID/app-specific-password
+credential set supported by electron-builder. The generated app has the
+Electron JIT entitlements required for hardened runtime notarization.
+
 Linux `deb` and `rpm` packages require project metadata such as `homepage`.
 The default metadata points at `https://github.com/timrozday-mgnify/read-helper-app`;
 change `homepage`, `repository`, and `bugs` in `package.json` if the canonical

@@ -38,6 +38,7 @@
   "build": {
     "appId": "org.ena.read-submission-helper",
     "productName": "ENA Read Submission Helper",
+    "forceCodeSigning": true,
     "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "icon": "build/icon",
     "directories": {
@@ -55,6 +56,10 @@
     ],
     "mac": {
       "category": "public.app-category.utilities",
+      "hardenedRuntime": true,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.inherit.plist",
+      "notarize": true,
       "target": [
         {
           "target": "dmg",
