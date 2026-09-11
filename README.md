@@ -52,7 +52,7 @@ credential set supported by electron-builder. The generated app has the
 Electron JIT entitlements required for hardened runtime notarization.
 
 Linux `deb` and `rpm` packages require project metadata such as `homepage`.
-The default metadata points at `https://github.com/timrozday-mgnify/read-helper-app`;
+The default metadata points at `https://github.com/EBI-Metagenomics/read-helper-app`;
 change `homepage`, `repository`, and `bugs` in `package.json` if the canonical
 repository is different.
 

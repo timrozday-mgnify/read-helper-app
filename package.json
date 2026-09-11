@@ -4,13 +4,13 @@
   "description": "Native Electron helper for direct ENA read submissions.",
   "author": "ENA Read Submission Helper maintainers",
   "desktopName": "ena-read-submission-helper",
-  "homepage": "https://github.com/timrozday-mgnify/read-helper-app",
+  "homepage": "https://github.com/EBI-Metagenomics/read-helper-app",
   "repository": {
     "type": "git",
-    "url": "https://github.com/timrozday-mgnify/read-helper-app.git"
+    "url": "https://github.com/EBI-Metagenomics/read-helper-app.git"
   },
   "bugs": {
-    "url": "https://github.com/timrozday-mgnify/read-helper-app/issues"
+    "url": "https://github.com/EBI-Metagenomics/read-helper-app/issues"
   },
   "main": "dist/main.js",
   "private": true,
